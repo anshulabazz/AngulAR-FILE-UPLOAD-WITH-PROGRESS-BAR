@@ -1,57 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FiileService } from 'src/app/services/fiile.service';
+import { ImgserviceService } from 'src/app/imgservice.service';
 @Component({
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.css']
 })
 export class FileUploadComponent implements OnInit {
-
+  forms = {
+    title: '',
+    description: ''
+  }
   selectedFiles?: FileList;
-  currentFile?: File;
+  currentFile: File[]=[];
+  item!: Observable<any>;
   progress = 0;
   message = '';
   fileInfos?: Observable<any>;
-  constructor(private uploadService: FiileService) { }
+  constructor(private uploadService: ImgserviceService) { }
   ngOnInit() {
-    this.fileInfos = this.uploadService.getFiles();
-    console.log(this.fileInfos)
+    this.item = this.uploadService.getall()
+    
   }
-  selectFile(event: any): void {
-    this.selectedFiles = event.target.files;
-  }
-  
-  upload(): void {
-    this.progress = 0;
-    if (this.selectedFiles) {
-      const file: File | null = this.selectedFiles.item(0);
-      if (file) {
-        this.currentFile = file;
-        this.uploadService.upload(this.currentFile).subscribe({
-          next: (event: any) => {
-            if (event.type === HttpEventType.UploadProgress) {
-              this.progress = Math.round(100 * event.loaded / event.total);
-            } else if (event instanceof HttpResponse) {
-              this.message = event.body.message;
-              this.fileInfos = this.uploadService.getFiles();
-            }
-          },
-          error: (err: any) => {
-            console.log(err);
-            this.progress = 0;
-            if (err.error && err.error.message) {
-              this.message = err.error.message;
-            } else {
-              this.message = 'Could not upload the file!';
-            }
-            this.currentFile = undefined;
-          }
-        });
-      }
-      this.selectedFiles = undefined;
-    }
-  }
+  onchange(event: any) {
+      this.selectedFiles = event.target.files
 
+    
+  }
+  onsubmit() {
+    const { title, description } = this.forms
+    if (this.selectedFiles) {
+      for (var i = 0; i < this.selectedFiles.length; i++) {
+        const file: File | null = this.selectedFiles.item(i)
+        if (file) {
+          this.currentFile.push(file)
+          
+        }
+        
+      }
+      console.log(this.currentFile)
+      this.uploadService.upload(title, description, this.currentFile).subscribe(data => {
+        console.log(data)
+      })
+      
+      
+       
+      
+    }
+
+  }
 }

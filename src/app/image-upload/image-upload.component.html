@@ -1,0 +1,23 @@
+<div>
+  <div>
+    <form (ngSubmit)="upload()" #f="ngForm">
+      <label>Title</label>
+      <input type="text" name="title" [(ngModel)]="form.title" />
+      <label>Title</label>
+      <input type="text" name="description" [(ngModel)]="form.description" />
+      <label>FIle:</label>
+      <input type="file" name="images" (change)="selected($event)" />
+      <button>Upload</button>
+    </form>
+   
+
+  </div>
+  </div>
+
+
+
+
+<div *ngFor="let content of content|async">
+<p>{{content.title}}</p>
+  <img src="{{content.imagepath}}" />
+</div>

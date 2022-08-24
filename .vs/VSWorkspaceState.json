@@ -1,12 +1,12 @@
 {
   "ExpandedNodes": [
     "",
+    "\\.angular",
     "\\src",
     "\\src\\app",
     "\\src\\app\\file-upload",
     "\\src\\app\\home",
-    "\\src\\app\\models",
-    "\\src\\app\\services"
+    "\\src\\app\\image-upload"
   ],
   "SelectedNode": "\\src\\app\\file-upload\\file-upload.component.ts",
   "PreviewInSolutionExplorer": false

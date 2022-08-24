@@ -1,32 +1,17 @@
-<div class="row">
-  <div class="col-8">
-    <label class="btn btn-default p-0">
-      <input type="file" (change)="selectFile($event)" />
-    </label>
-  </div>
-  <div class="col-4">
-    <button class="btn btn-success btn-sm" [disabled]="!selectedFiles" (click)="upload()">
-      Upload
-    </button>
-  </div>
-</div>
-<div *ngIf="currentFile" class="progress my-3">
-  <div class="progress-bar progress-bar-info progress-bar-striped"
-       role="progressbar"
-       attr.aria-valuenow="{{ progress }}"
-       aria-valuemin="0"
-       aria-valuemax="100"
-       [ngStyle]="{ width: progress + '%' }">
-    {{ progress }}%
+<div>
+  <div>
+    <form (ngSubmit)="onsubmit()">
+      <label>Title</label>
+      <input type="text" name="title" [(ngModel)]="forms.title" />
+      <label>Description</label>
+      <input type="text" name="description" [(ngModel)]="forms.description" />
+      <label>file</label>
+      <input type="file" name="images" multiple (change)="onchange($event)" />
+      <button>Upload</button>
+    </form>
   </div>
 </div>
-<div *ngIf="message" class="alert alert-secondary" role="alert">{{ message }}</div>
-<div class="card mt-3">
-  <div class="card-header">List of Files</div>
-  <ul class="list-group list-group-flush"
-      *ngFor="let image of fileInfos | async">
-    <li class="list-group-item">
-      <img src="data:image/jpg;base64,{{ image.data }}" alt="{{ image.name }}" />
-    </li>
-  </ul>
+<div>
+  <div *ngFor="let item of item| async"></div>
+  
 </div>

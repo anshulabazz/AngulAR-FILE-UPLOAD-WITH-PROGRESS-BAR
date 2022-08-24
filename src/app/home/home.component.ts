@@ -1,44 +1,67 @@
 import { Component, OnInit } from '@angular/core';
 import { ImgserviceService } from '../imgservice.service'
-import { Files } from '../models/file.model'
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Files } from '../models/file.model';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  data:Files={
-    title: '',
-    description: '',
-    file:null
+  data!: Observable<any>
+  image: any
+  selectedFiles?: FileList;
+  currentFile?: File;
+  progress = 0;
+  message = '';
+  fileInfos?: Observable<any>;
+  constructor(private uploadService: ImgserviceService, public dom: DomSanitizer) { }
+  ngOnInit() {
+    this.data = this.uploadService.getall()
+    console.log(this.data)
   }
-  image:any
-
-  constructor(public imgservice: ImgserviceService) { }
-
-  ngOnInit(): void {
+  selectFile(event: any): void {
+    this.selectedFiles = event.target.files;
   }
-  fileupload(event: Event) {
-    const target = event.target as HTMLInputElement
-    const file = target.files;
-    this.data.file = file;
 
-    
-
-  }
-  onsubmit() {
-    let fd = new FormData();
-    fd.append('file',this.data.file)
-    const {title, description } = this.data;
-    console.log(fd,title,description)
-    this.imgservice.uploadimage(fd,title,description).subscribe(data => {
-      console.log(data)
-    },
-      err => {
-        console.log(err)
+ upload(): void {
+   /* this.progress = 0;
+    if (this.selectedFiles) {
+      const file: File | null = this.selectedFiles.item(0);
+      if (file) {
+        this.currentFile = file;
+        this.uploadService.upload(this.currentFile).subscribe({
+          next: (event: any) => {
+            if (event.type === HttpEventType.UploadProgress) {
+              this.progress = Math.round(100 * event.loaded / event.total);
+            } else if (event instanceof HttpResponse) {
+              this.message = event.body.message;
+            }
+          },
+          error: (err: any) => {
+            console.log(err);
+            this.progress = 0;
+            if (err.error && err.error.message) {
+              this.message = err.error.message;
+            } else {
+              this.message = 'Could not upload the file!';
+            }
+            this.currentFile = undefined;
+          }
+        });
       }
-    )
-    
+      this.selectedFiles = undefined;
+    }
   }
+  getimage() {
+    this.uploadService.getall().subscribe(data => {
+      this.image='data:image/jpg;base64',+data.file.buffer
 
+    })
+    */
+  }
+  
 }
+

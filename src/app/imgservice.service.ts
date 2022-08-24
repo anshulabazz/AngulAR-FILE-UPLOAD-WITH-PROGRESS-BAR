@@ -1,21 +1,28 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHandler, HttpHeaders, } from '@angular/common/http';
+import { HttpRequest, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class ImgserviceService {
- private url ='http://localhost:8080'
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Access-Control-Allow-Origin': '*'
-    })
+  private baseUrl = 'http://localhost:8080';
+  constructor(private http: HttpClient) { }
+  upload(title: any, description: any, images: File[]): Observable<HttpEvent<any>> {
+    const formData: FormData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    for (var i = 0; i < images.length; i++) {
+      formData.append('images', images[i]);
+    }
+    const req = new HttpRequest('POST', `${this.baseUrl}/upload`, formData, {
+      reportProgress: true,
+      responseType: 'json'
+    });
+    return this.http.request(req);
   }
-
-  constructor(public http: HttpClient) { }
-
-  uploadimage(file: any, title: any, description: any): Observable<any> {
-    return this.http.post(this.url+'/upload', { file, title, description }, this.httpOptions)
-
+  getall(): Observable<any> {
+    return this.http.get(this.baseUrl+'/multiget')
   }
 }
+//For multiple file upload service
